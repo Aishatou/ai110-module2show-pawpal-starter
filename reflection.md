@@ -3,9 +3,11 @@
 ## 1. System Design
 
 **a. Initial design**
+1. Add owner and pet info - Enter basic details about the owner and their pet 
+2. Add and manage tasks -- Create care tasks( walks, feeding, med, etc) with duration and priority 
+3. Generate and view a daily plan -- Get a scheduled plan for the day based on constraints and priorities, with an explanation of why taks were ordered that way. 
 
-- Briefly describe your initial UML design.
-- What classes did you include, and what responsibilities did you assign to each?
+
 
 **b. Design changes**
 
