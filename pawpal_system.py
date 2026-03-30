@@ -10,9 +10,25 @@ class Task:
     completed: bool = False
 
     def mark_complete(self):
-        """Mark this task as completed."""
+        """Mark this task as completed and return a new recurring task if applicable."""
+        from datetime import datetime, timedelta
         self.completed = True
-
+        today = datetime.today().date()
+        if self.frequency == "daily":
+            return Task(
+                description=self.description,
+                duration=self.duration,
+                priority=self.priority,
+                frequency=self.frequency
+            )
+        elif self.frequency == "weekly":
+            return Task(
+                description=self.description,
+                duration=self.duration,
+                priority=self.priority,
+                frequency=self.frequency
+            )
+        return None
     def __str__(self):
         status = "✅" if self.completed else "⬜"
         return f"{status} {self.description} ({self.duration} mins) [{self.priority} priority]"
@@ -104,7 +120,20 @@ class Scheduler:
         for pet_name, task in schedule:
             lines.append(f"  {pet_name:10} | {task}")
         return "\n".join(lines)
-    
+    def mark_task_complete(self, pet_name: str, description: str) -> str:
+        """Mark a task complete and auto-schedule if recurring."""
+        for pet in self.owner.pets:
+            if pet.name.lower() == pet_name.lower():
+                for task in pet.tasks:
+                    if task.description.lower() == description.lower() and not task.completed:
+                        new_task = task.mark_complete()
+                        if new_task:
+                            pet.add_task(new_task)
+                            return f"✅ '{description}' marked complete. Next occurrence added!"
+                        return f"✅ '{description}' marked complete."
+                return f"❌ Task '{description}' not found for {pet_name}."
+        return f"❌ Pet '{pet_name}' not found."
 
     
+
 

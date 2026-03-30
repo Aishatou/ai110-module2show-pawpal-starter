@@ -30,4 +30,15 @@ if conflicts:
         print(c)
 else:
     print("✅ No conflicts detected.")
-    
+
+
+# --- Test Recurring Tasks ---
+print("\n--- Testing Recurring Tasks ---")
+result = scheduler.mark_task_complete("Buddy", "Morning Walk")
+print(result)
+
+# Show updated task count
+print(f"\nBuddy's tasks after completion: {len(buddy.tasks)}")
+for task in buddy.tasks:
+    print(f"  {task}")
+
