@@ -50,7 +50,7 @@ py -m pytest
 
 ## 📸 Demo
 
-> ![PawPal+ PawPal Demo](PawPal Demo.png)
+> ![PawPal+ Demo](demo.png)
 
 
 ## Smarter Scheduling
