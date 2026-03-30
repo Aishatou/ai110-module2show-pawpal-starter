@@ -7,7 +7,21 @@
 2. Add and manage tasks -- Create care tasks( walks, feeding, med, etc) with duration and priority 
 3. Generate and view a daily plan -- Get a scheduled plan for the day based on constraints and priorities, with an explanation of why taks were ordered that way. 
 
+I designed four classes:
 
+- Task: Represents a single care activity. It stores a description, 
+  duration, priority, frequency, and completion status. It can mark 
+  itself complete.
+
+- Pet: Stores the pet's name, species, age, allergies, and preferences. 
+  It holds a list of tasks and can add new ones.
+
+- Owner: Holds the owner's name and a list of their pets. It can add 
+  pets and retrieve all tasks across all pets.
+
+- Scheduler: The brain of the app. It references the Owner and handles 
+  generating the schedule, sorting by priority, detecting conflicts, 
+  and filtering tasks.
 
 **b. Design changes**
 
