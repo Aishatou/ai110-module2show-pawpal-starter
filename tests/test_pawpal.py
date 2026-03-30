@@ -70,4 +70,28 @@ def test_once_task_does_not_recur():
     
     assert len(pet.tasks) == initial_count
 
+def test_generate_schedule_excludes_completed_tasks():
+    """generate_schedule() should only return pending tasks."""
+    owner = Owner("Test")
+    pet = Pet("Max", "Dog", 2)
+    t1 = Task("Walk", 30, "high", "once")
+    t2 = Task("Feed", 10, "medium", "daily")
+    t1.completed = True
+    pet.add_task(t1)
+    pet.add_task(t2)
+    owner.add_pet(pet)
+    scheduler = Scheduler(owner)
+
+    schedule = scheduler.generate_schedule()
+    assert len(schedule) == 1
+    assert schedule[0][1].description == "Feed"
+
+def test_no_tasks_returns_empty_schedule():
+    """A pet with no tasks should return an empty schedule."""
+    owner = Owner("Test")
+    pet = Pet("Empty", "Cat", 1)
+    owner.add_pet(pet)
+    scheduler = Scheduler(owner)
+
+    assert scheduler.generate_schedule() == []
     
