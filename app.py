@@ -99,6 +99,13 @@ if st.session_state.owner is None:
 else:
     scheduler = Scheduler(st.session_state.owner)
 
+    # Conflict warnings always visible
+    conflicts = scheduler.detect_conflicts()
+    if conflicts:
+        st.subheader("⚠️ Conflicts Detected")
+        for c in conflicts:
+            st.warning(c)
+
     if st.button("Generate Schedule"):
         schedule = scheduler.generate_schedule()
 
@@ -107,9 +114,9 @@ else:
         else:
             st.success("Here's your plan for today, sorted by priority:")
             table = []
-            for pet_name, task in schedule:
+            for pname, task in schedule:
                 table.append({
-                    "Pet": pet_name,
+                    "Pet": pname,
                     "Task": task.description,
                     "Duration": f"{task.duration} mins",
                     "Priority": task.priority,
@@ -118,14 +125,20 @@ else:
                 })
             st.table(table)
 
-            # Conflict warnings
-            conflicts = scheduler.detect_conflicts()
-            if conflicts:
-                st.subheader("⚠️ Conflicts Detected")
-                for c in conflicts:
-                    st.warning(c)
-            else:
-                st.success("✅ No conflicts detected!")
+    # --- Mark Task Complete ---
+    st.subheader("✅ Mark Task Complete")
+    pending = scheduler.filter_by_status(False)
+    if pending:
+        options = [f"{n} — {t.description}" for n, t in pending]
+        choice = st.selectbox("Select task to complete", options)
+        if st.button("Mark Complete"):
+            idx = options.index(choice)
+            pname, task = pending[idx]
+            result = scheduler.mark_task_complete(pname, task.description)
+            st.success(result)
+            st.rerun()
+    else:
+        st.success("🎉 All tasks are complete for today!")
 #if st.button("Generate schedule"):
     #st.warning(
         #"Not implemented yet. Next step: create your scheduling logic (classes/functions) and call it here."
@@ -139,4 +152,5 @@ else:
 #4. Connect your scheduler here and display results.
 #"""
     #)
+
 
