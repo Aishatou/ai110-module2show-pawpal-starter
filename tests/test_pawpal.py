@@ -44,3 +44,30 @@ def test_filter_by_status(sample_owner):
     pending = scheduler.filter_by_status(False)
     assert all(not task.completed for _, task in pending)
 
+def test_recurring_daily_task_creates_new_task():
+    """Marking a daily task complete should add a new task for the pet."""
+    owner = Owner("Test")
+    pet = Pet("Rex", "Dog", 3)
+    pet.add_task(Task("Morning Walk", 30, "high", "daily"))
+    owner.add_pet(pet)
+    scheduler = Scheduler(owner)
+    
+    initial_count = len(pet.tasks)
+    scheduler.mark_task_complete("Rex", "Morning Walk")
+    
+    assert len(pet.tasks) == initial_count + 1
+
+def test_once_task_does_not_recur():
+    """Marking a 'once' task complete should NOT add a new task."""
+    owner = Owner("Test")
+    pet = Pet("Luna", "Cat", 2)
+    pet.add_task(Task("Vet Visit", 60, "high", "once"))
+    owner.add_pet(pet)
+    scheduler = Scheduler(owner)
+    
+    initial_count = len(pet.tasks)
+    scheduler.mark_task_complete("Luna", "Vet Visit")
+    
+    assert len(pet.tasks) == initial_count
+
+    
